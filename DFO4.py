@@ -5,25 +5,29 @@ Created on Tue Feb 20 21:23:02 2018
 
 @author: daviddevito
 """
+#This script uses BeautifulSoup to scrape NHL rosters and stats from dailyfaceoff.com
+#It writes each team's roster and stats to a separate text file
 
 import requests
 from bs4 import BeautifulSoup
 import re
 
+# List of team names
 teamName = ["anaheim-ducks","arizona-coyotes","boston-bruins","buffalo-sabres","calgary-flames","carolina-hurricanes","chicago-blackhawks","colorado-avalanche","columbus-blue-jackets","dallas-stars","detroit-red-wings","edmonton-oilers","florida-panthers","los-angeles-kings","minnesota-wild","montreal-canadiens","nashville-predators","new-jersey-devils","new-york-islanders","new-york-rangers","ottawa-senators","philadelphia-flyers","pittsburgh-penguins","san-jose-sharks","st-louis-blues","tampa-bay-lightning","toronto-maple-leafs","vancouver-canucks","vegas-golden-knights","washington-capitals","winnipeg-jets"]
-#teamName = input("Enter the team to run: ")
+
+# Loop through each team
 for k in range(0,len(teamName)):
     print(teamName[k])
-    fileToOpen = teamName[k] + '.txt'
     
+    # Open a new or existing text file named after the current team
+    fileToOpen = teamName[k] + '.txt'
     fileName = open(fileToOpen,"w")
-    #printing headers
+    # Printing headers
     fileName.write('Name\tGoals\tAssists\tShots\tBlocks\tPPP\tMin/Gm\tDKSalary\tFDSalary\tShots+Blocks/GM\tDKPts/GM\n')
     
+    # Access the team page and get content
     url = "https://www.dailyfaceoff.com/teams/" + teamName[k] + "/line-combinations/stats/"
-    
     r = requests.get(url)
-    
     soup = BeautifulSoup(r.content)
     
     name_data = soup.find_all("a", {"class": "player-link"})
